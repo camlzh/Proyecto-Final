@@ -10,7 +10,7 @@ namespace HotelReservas
         }
 
         /// <summary>
-        /// Controla la ejecución general del sistema.
+        /// Controla la ejecución principal del sistema hotelero.
         /// </summary>
         static void EjecutarSistemaReservas()
         {
@@ -18,6 +18,7 @@ namespace HotelReservas
 
             while (continuar)
             {
+                MostrarTitulo();
                 MostrarMenu();
 
                 int opcion = LeerOpcion();
@@ -33,15 +34,27 @@ namespace HotelReservas
                         break;
 
                     case 3:
-                        Console.WriteLine("Sistema finalizado.");
+                        Console.WriteLine("\nGracias por usar el sistema.");
                         continuar = false;
                         break;
 
                     default:
-                        Console.WriteLine("Opción inválida.");
+                        Console.WriteLine("\nOpción inválida.");
                         break;
                 }
+
+                PausarPantalla();
             }
+        }
+
+        /// <summary>
+        /// Muestra el título principal del sistema.
+        /// </summary>
+        static void MostrarTitulo()
+        {
+            Console.WriteLine("\n====================================");
+            Console.WriteLine("     SISTEMA DE RESERVAS HOTEL");
+            Console.WriteLine("====================================");
         }
 
         /// <summary>
@@ -49,24 +62,30 @@ namespace HotelReservas
         /// </summary>
         static void MostrarMenu()
         {
-            Console.WriteLine("\n===== HOTEL =====");
-            Console.WriteLine("1. Reservar habitación sencilla");
-            Console.WriteLine("2. Reservar habitación doble");
+            Console.WriteLine("\n1. Habitación sencilla");
+            Console.WriteLine("2. Habitación doble");
             Console.WriteLine("3. Salir");
         }
 
         /// <summary>
-        /// Lee la opción seleccionada.
+        /// Lee una opción válida del menú.
         /// </summary>
-        /// <returns>Opción elegida por el usuario.</returns>
+        /// <returns>Opción seleccionada por el usuario.</returns>
         static int LeerOpcion()
         {
-            Console.Write("Seleccione una opción: ");
-            return int.Parse(Console.ReadLine());
+            int opcion;
+
+            do
+            {
+                Console.Write("\nSeleccione una opción: ");
+
+            } while (!int.TryParse(Console.ReadLine(), out opcion));
+
+            return opcion;
         }
 
         /// <summary>
-        /// Procesa la reserva de una habitación.
+        /// Procesa la reserva seleccionada.
         /// </summary>
         /// <param name="tipoHabitacion">Nombre de la habitación.</param>
         /// <param name="precioNoche">Precio por noche.</param>
@@ -82,13 +101,20 @@ namespace HotelReservas
         }
 
         /// <summary>
-        /// Solicita la cantidad de noches.
+        /// Solicita una cantidad válida de noches.
         /// </summary>
-        /// <returns>Número de noches.</returns>
+        /// <returns>Cantidad de noches.</returns>
         static int LeerCantidadNoches()
         {
-            Console.Write("Ingrese cantidad de noches: ");
-            return int.Parse(Console.ReadLine());
+            int noches;
+
+            do
+            {
+                Console.Write("Ingrese cantidad de noches: ");
+
+            } while (!int.TryParse(Console.ReadLine(), out noches) || noches <= 0);
+
+            return noches;
         }
 
         /// <summary>
@@ -113,9 +139,9 @@ namespace HotelReservas
         }
 
         /// <summary>
-        /// Calcula el total final.
+        /// Calcula el total final de la reserva.
         /// </summary>
-        /// <param name="subtotal">Subtotal.</param>
+        /// <param name="subtotal">Subtotal calculado.</param>
         /// <param name="impuesto">Impuesto calculado.</param>
         /// <returns>Total a pagar.</returns>
         static double CalcularTotal(double subtotal, double impuesto)
@@ -124,7 +150,7 @@ namespace HotelReservas
         }
 
         /// <summary>
-        /// Muestra el resumen de la reserva.
+        /// Muestra el resumen final de la reserva.
         /// </summary>
         /// <param name="habitacion">Tipo de habitación.</param>
         /// <param name="noches">Cantidad de noches.</param>
@@ -138,12 +164,22 @@ namespace HotelReservas
             double impuesto,
             double total)
         {
-            Console.WriteLine("\n===== RESUMEN =====");
-            Console.WriteLine($"Habitación: {habitacion}");
-            Console.WriteLine($"Noches: {noches}");
-            Console.WriteLine($"Subtotal: ${subtotal}");
-            Console.WriteLine($"Impuesto: ${impuesto}");
-            Console.WriteLine($"Total: ${total}");
+            Console.WriteLine("\n========== RESUMEN ==========");
+            Console.WriteLine($"Habitación : {habitacion}");
+            Console.WriteLine($"Noches     : {noches}");
+            Console.WriteLine($"Subtotal   : ${subtotal}");
+            Console.WriteLine($"Impuesto   : ${impuesto}");
+            Console.WriteLine($"Total      : ${total}");
+            Console.WriteLine("=============================");
+        }
+
+        /// <summary>
+        /// Pausa la pantalla hasta que el usuario presione ENTER.
+        /// </summary>
+        static void PausarPantalla()
+        {
+            Console.WriteLine("\nPresione ENTER para continuar...");
+            Console.ReadLine();
         }
     }
 }
