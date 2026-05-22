@@ -34,6 +34,10 @@ namespace HotelReservas
                         break;
 
                     case 3:
+                        ProcesarReserva("Suite Premium", 300000);
+                        break;
+
+                    case 4:
                         Console.WriteLine("\nGracias por usar el sistema.");
                         continuar = false;
                         break;
@@ -48,7 +52,7 @@ namespace HotelReservas
         }
 
         /// <summary>
-        /// Muestra el título principal del sistema.
+        /// Muestra el título principal.
         /// </summary>
         static void MostrarTitulo()
         {
@@ -62,15 +66,16 @@ namespace HotelReservas
         /// </summary>
         static void MostrarMenu()
         {
-            Console.WriteLine("\n1. Habitación sencilla");
-            Console.WriteLine("2. Habitación doble");
-            Console.WriteLine("3. Salir");
+            Console.WriteLine("\n1. Habitación sencilla - $80.000");
+            Console.WriteLine("2. Habitación doble - $150.000");
+            Console.WriteLine("3. Suite premium - $300.000");
+            Console.WriteLine("4. Salir");
         }
 
         /// <summary>
-        /// Lee una opción válida del menú.
+        /// Lee una opción válida.
         /// </summary>
-        /// <returns>Opción seleccionada por el usuario.</returns>
+        /// <returns>Opción seleccionada.</returns>
         static int LeerOpcion()
         {
             int opcion;
@@ -94,10 +99,22 @@ namespace HotelReservas
             int noches = LeerCantidadNoches();
 
             double subtotal = CalcularSubtotal(precioNoche, noches);
-            double impuesto = CalcularImpuesto(subtotal);
-            double total = CalcularTotal(subtotal, impuesto);
 
-            MostrarResumen(tipoHabitacion, noches, subtotal, impuesto, total);
+            double descuento = CalcularDescuento(subtotal, noches);
+
+            double subtotalConDescuento = subtotal - descuento;
+
+            double impuesto = CalcularImpuesto(subtotalConDescuento);
+
+            double total = CalcularTotal(subtotalConDescuento, impuesto);
+
+            MostrarResumen(
+                tipoHabitacion,
+                noches,
+                subtotal,
+                descuento,
+                impuesto,
+                total);
         }
 
         /// <summary>
@@ -129,6 +146,22 @@ namespace HotelReservas
         }
 
         /// <summary>
+        /// Calcula descuento según cantidad de noches.
+        /// </summary>
+        /// <param name="subtotal">Subtotal de la reserva.</param>
+        /// <param name="noches">Cantidad de noches.</param>
+        /// <returns>Valor del descuento.</returns>
+        static double CalcularDescuento(double subtotal, int noches)
+        {
+            if (noches >= 5)
+            {
+                return subtotal * 0.15;
+            }
+
+            return 0;
+        }
+
+        /// <summary>
         /// Calcula el impuesto hotelero.
         /// </summary>
         /// <param name="subtotal">Subtotal de la reserva.</param>
@@ -155,12 +188,14 @@ namespace HotelReservas
         /// <param name="habitacion">Tipo de habitación.</param>
         /// <param name="noches">Cantidad de noches.</param>
         /// <param name="subtotal">Subtotal.</param>
+        /// <param name="descuento">Descuento aplicado.</param>
         /// <param name="impuesto">Impuesto.</param>
         /// <param name="total">Total final.</param>
         static void MostrarResumen(
             string habitacion,
             int noches,
             double subtotal,
+            double descuento,
             double impuesto,
             double total)
         {
@@ -168,13 +203,14 @@ namespace HotelReservas
             Console.WriteLine($"Habitación : {habitacion}");
             Console.WriteLine($"Noches     : {noches}");
             Console.WriteLine($"Subtotal   : ${subtotal}");
+            Console.WriteLine($"Descuento  : ${descuento}");
             Console.WriteLine($"Impuesto   : ${impuesto}");
             Console.WriteLine($"Total      : ${total}");
             Console.WriteLine("=============================");
         }
 
         /// <summary>
-        /// Pausa la pantalla hasta que el usuario presione ENTER.
+        /// Pausa la consola hasta que el usuario presione ENTER.
         /// </summary>
         static void PausarPantalla()
         {
